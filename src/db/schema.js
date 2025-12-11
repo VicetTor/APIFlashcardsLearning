@@ -13,7 +13,7 @@ export const user = sqliteTable('user',{
     ),
 })
 
-export const collection = sqliteTable('collection'{
+export const collection = sqliteTable('collection',{
     id: text().primaryKey().$defaultFn(()=>randomUUID()),
     title: text('title', {length:100}).notNull(),
     description: text('description', {length:255}),
@@ -21,6 +21,17 @@ export const collection = sqliteTable('collection'{
     createdAt: integer('created_at', { mode: 'timestamp'}).$defaultFn(
         () => new Date()
     ),
-    owner: text('owner').references(()=> user.id,{ onDelete: 'cascade' }).notNull()
+    owner: text('owner').references(()=>user.id,{ onDelete: 'cascade' }).notNull(),
 })
+
+export const flashcard = sqliteTable('flashcard', {
+    id: text().primaryKey().$defaultFn(()=>randomUUID()),
+    front: text('front', {length:100}).notNull(),
+    back: text('back', {length:100}).notNull(),
+    createdAt: integer('created_at', { mode: 'timestamp'}).$defaultFn(
+        () => new Date()
+    ),
+})
+
+
 
