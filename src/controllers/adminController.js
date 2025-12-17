@@ -3,7 +3,8 @@ import { users } from '../db/schema.js'
 
 export const getAllUsers = async(req, res) => {
     try {
-        listUsers = await db.select().from(users)
+        const listUsers = await db.select().from(users)
+        console.debug(listUsers)
         if(!listUsers){
             return res.status(401).json({error: 'no users'})
         }
