@@ -1,7 +1,7 @@
 import express from 'express'
 import logger from './middlewares/loggerMiddleware.js'
 import authRouter from './routers/authRouter.js'
-import { collectionRouter } from './routers/collectionRouter.js'
+import collectionRouter from './routers/collectionRouter.js'
 const PORT = process.env.PORT || 3000
 
 const app = express()

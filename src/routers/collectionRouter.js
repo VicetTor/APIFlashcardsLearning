@@ -1,8 +1,14 @@
 import { Router } from "express"
-import { createCollection, getAllCollection  } from "../controllers/collectionController.js"
-// import { validateBody } from "../middleware/validation.js"
-import { collection } from "../models/collectionModel.js"
+import { createCollection, getCollectionById, getCollectionByTitle} from "../controllers/collectionController.js"
 
 const router = Router()
 
-router.get("/collection", getAllCollection)
+/*------------------GET------------------*/ 
+router.get('/:idCollection', getCollectionById)
+router.get('/title/:title', getCollectionByTitle)
+
+/*------------------POST-----------------*/
+router.post('/:idUser', createCollection)
+
+
+export default router
