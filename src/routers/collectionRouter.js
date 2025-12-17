@@ -1,11 +1,12 @@
 import { Router } from "express"
-import { createCollection, getCollectionById, getCollectionByTitle} from "../controllers/collectionController.js"
+import { createCollection, getCollectionById, getCollectionByTitle, getMyCollection} from "../controllers/collectionController.js"
 import { authenticateToken } from '../middlewares/authMiddleware.js'
 
 const router = Router()
 router.use(authenticateToken)
 
 /*------------------GET------------------*/ 
+router.get('/mine', getMyCollection)
 router.get('/:idCollection', getCollectionById)
 router.get('/title/:title', getCollectionByTitle)
 
