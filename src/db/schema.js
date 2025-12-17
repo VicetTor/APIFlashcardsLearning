@@ -28,8 +28,8 @@ export const flashcard = sqliteTable('flashcard', {
     id: text().primaryKey().$defaultFn(()=>randomUUID()),
     front: text('front', {length:100}).notNull(),
     back: text('back', {length:100}).notNull(),
-    urlFront: text('url_front', {length:100}).notNull(),
-    urlBack: text('url_back', {length:100}).notNull(),
+    urlFront: text('url_front', {length:100}),
+    urlBack: text('url_back', {length:100}),
     createdAt: integer('created_at', { mode: 'timestamp'}).$defaultFn(
         () => new Date()
     ),

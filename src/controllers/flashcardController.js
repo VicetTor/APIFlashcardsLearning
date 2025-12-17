@@ -38,3 +38,33 @@ export const getAllFlashCardsFromCollection = async (req, res)=>{
         })
     }
 }
+
+/**
+ * @param {request} req
+ * @param {response} res
+ */
+
+export const createFlashCardInCollection = async (req, res)=>{
+    const { id } = req.params;
+    const { front, back, urlFront, urlBack } = req.body;
+
+    //TODO Implémentation de la logique de récupération de la collection en base pour rattaché avec l'id
+
+    if(!front || !back){
+        return res(400).send({error: "Front text and back text are required"})
+    }
+
+    try{
+        if(urlFront && urlBack){
+            const [newFlashCard] = await db.insert(flashcard).values({front:front, back:back, urlFront:urlFront, urlBack:urlBack}).returning()
+            res.status().send({message:"Flashcard created with urls", data:newFlashCard})
+        }
+        const [newFlashCard] = await db.insert(flashcard).values({front:front, back:back}).returning()
+        res.status().send({message:"Flashcard created without urls", data:newFlashCard})
+    }
+    catch(error){
+        res.status(500).send({
+            error: 'Failed to post flashcard',
+        })
+    }
+}
