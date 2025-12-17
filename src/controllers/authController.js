@@ -1,5 +1,6 @@
 import { db } from '../db/database.js'
 import { users } from '../db/schema.js'
+import { eq } from "drizzle-orm"
 import bcrypt from 'bcrypt'
 import jwt  from 'jsonwebtoken'
 import 'dotenv/config' 
