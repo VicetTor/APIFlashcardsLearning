@@ -75,3 +75,42 @@ export const login = async (req, res) => {
         })
     }
 }
+
+/**
+ * 
+ * @param {request} req 
+ * @param {response} res 
+ * @returns 
+ */
+export const currentUser = async (req, res) => {
+    try{
+        const userId = req.user
+        console.log("Current user ID:", userId)
+
+        // const [user] = await db.select().from(users).where(eq(users.id,userId))
+
+        // if(!user){
+        //     return res.status(401).json({error: "Not logged in"})
+        // }
+
+        // res.status(200).json({
+        //     message: 'Current user',
+        //     userData: {
+        //         id: user.id,
+        //         mail: user.mail,
+        //         firstName: user.firstName,
+        //         lastName: user.lastName,
+        //         isAdmin: user.isAdmin,
+        //         createdAt: user.createdAt,
+        //     },
+        //     token
+        // })
+        res.status(200);
+
+    }catch(error){
+        console.error(error)
+        res.status(500).send({
+            error: 'Fetching current user failed',
+        })
+    }
+}
