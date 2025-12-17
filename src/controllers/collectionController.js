@@ -1,7 +1,7 @@
 import {db} from "../db/database.js"
 import { collections } from "../db/schema.js"
 import { request, response } from "express"
-import { eq, and } from "drizzle-orm"
+import { eq, and, is } from "drizzle-orm"
 
 /**
  * 
@@ -95,6 +95,31 @@ export const getMyCollection = async (req, res) => {
         console.error(error)
         res.status(500).send({
             error: 'Failed to query my collection',
+            reason: error
+        })
+    }
+}
+
+/**
+ * @param {request} req
+ * @param {response} res
+ */
+export const updateCollection = async (req,res) => {
+    const userId = req.user.userId 
+    const { idCollection } = req.params
+    const { title, description, isPublic } = req.body
+    try{
+        const results = await db.update(collections)
+            .set({title:title},{description:description},{isPublic:isPublic})
+            .where(eq(collections.userId, userId), eq(collections.id, idCollection))
+            .returning({id:collections.id})
+        
+        res.status(200).send({message: 'Collection updated', data:results})
+        console.log(results)
+    }catch(error){
+        console.error(error)
+        res.status(500).send({
+            error: 'Failed to update the collection',
             reason: error
         })
     }

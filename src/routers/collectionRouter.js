@@ -1,5 +1,5 @@
 import { Router } from "express"
-import { createCollection, getCollectionById, getCollectionByTitle, getMyCollection} from "../controllers/collectionController.js"
+import { createCollection, getCollectionById, getCollectionByTitle, getMyCollection, updateCollection} from "../controllers/collectionController.js"
 import { authenticateToken } from '../middlewares/authMiddleware.js'
 
 const router = Router()
@@ -12,5 +12,9 @@ router.get('/title/:title', getCollectionByTitle)
 
 /*------------------POST-----------------*/
 router.post('/:idUser', createCollection)
+
+/*------------------DELETE------------------*/
+
+router.put('/:idCollection', updateCollection)
 
 export default router
