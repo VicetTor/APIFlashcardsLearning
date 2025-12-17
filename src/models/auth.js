@@ -18,7 +18,7 @@ export const registerSchema = z.object({
 })
 
 export const loginSchema = z.object({
-    email: z.email(),
+    mail: z.email(),
     password: z
     .string()
     .min(8)
