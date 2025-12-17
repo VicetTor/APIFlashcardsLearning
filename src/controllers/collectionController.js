@@ -36,12 +36,14 @@ export const getCollectionById = async (req, res) => {
     try{
         const results = await db.select().from(collections).where(eq(collections.id, idCollection)).orderBy('created_at','desc')
         //Puisqu'il n'y a qu'une collection par ID alors on peut récupérer au premier index
-        if(results[0]["isPublic"] == 'true'){
+        if(results[0]["isPublic"] == true){
             res.status(200).json(results);
         }
-        res.status(403).send({
-            error: 'Vous n\'avez pas accès à cette page'
-        })
+        else{
+            res.status(403).send({
+                error: 'Vous n\'avez pas accès à cette page'
+            })
+        }
 
     }catch(error){
         console.error(error)
