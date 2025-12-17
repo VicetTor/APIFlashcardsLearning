@@ -46,7 +46,6 @@ export const getCollectionById = async (req, res) => {
         }
 
     }catch(error){
-        console.error(error)
         res.status(500).send({
             error: 'Failed to query collection',
             reason: error
@@ -71,7 +70,6 @@ export const getCollectionByTitle = async (req, res) => {
             res.status(200).json(results);
         }
     }catch(error){
-        console.error(error)
         res.status(500).send({
             error: 'Failed to query collection by title',
             reason: error
@@ -79,4 +77,25 @@ export const getCollectionByTitle = async (req, res) => {
     }
 }
 
-
+/**
+ * @param {request} req
+ * @param {response} res
+ */
+export const getMyCollection = async (req, res) => {
+    const userId = req.user.userId
+    try{
+        const results = await db.select().from(collections).where(eq(collections.userId, userId)).orderBy('created_at','desc')
+        if(results[0] == null){
+            res.status(200).send({information:"Vous n'avez aucune collection créées"})
+        }
+        else{
+            res.status(200).json(results);
+        }
+    }catch(error){
+        console.error(error)
+        res.status(500).send({
+            error: 'Failed to query my collection',
+            reason: error
+        })
+    }
+}
