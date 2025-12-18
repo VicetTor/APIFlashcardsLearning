@@ -26,7 +26,6 @@ export const register = async (req, res) =>{
         }).returning({id:users.id, mail:users.mail, firstName:users.firstName, lastName:users.lastName, isAdmin:users.isAdmin})
         
         const token = jwt.sign({id: newUser.id}, process.env.JWT_SECRET, {expiresIn: '24h'})
-        console.log(newUser)
         res.status(201).send({message: 'User created', userData:newUser, token})
 
     }catch(error){
