@@ -9,14 +9,20 @@ import { eq, and, is } from "drizzle-orm"
  * @param {response} res 
  */
 export const createCollection = async (req, res) => {
-    const { idUser } = req.params
+    const userId = req.user.userId
+    
+    if(typeof(userId) == undefined){
+        return res.status(500).send({error: "You are not allowed to do this, connect to your account."})
+    }
+
     const { title, description, isPublic } = req.body
 
     if(!title || (typeof(isPublic) == 'undefined') ){
         return res.status(400).send({error: "The title and the knowledge of the privacy is required"})
     }
+
     try{
-        const [newCollection] = await db.insert(collections).values({title: title, isPublic: isPublic, description:description, userId: idUser}).returning()
+        const [newCollection] = await db.insert(collections).values({title: title, isPublic: isPublic, description:description, userId: userId}).returning()
         res.status(201).send({message: 'Collection created', data:newCollection})
     }catch(error){
         res.status(500).send({
@@ -32,17 +38,29 @@ export const createCollection = async (req, res) => {
  */
 export const getCollectionById = async (req, res) => {
     const { idCollection } = req.params;
+    const userId = req.user.userId;
 
     try{
+        if(typeof(userId) == undefined){
+            res.status(500).send({
+                error:"Veuillez vous connecter"
+            })
+        }
+
         const results = await db.select().from(collections).where(eq(collections.id, idCollection)).orderBy('created_at','desc')
         //Puisqu'il n'y a qu'une collection par ID alors on peut récupérer au premier index
-        if(results[0]["isPublic"] == true){
+        if(results[0]["isPublic"]){
             res.status(200).json(results);
         }
         else{
-            res.status(403).send({
-                error: 'Vous n\'avez pas accès à cette page'
-            })
+            if(results[0]["userId"] == userId){
+                res.status(200).json(results);
+            }
+            else{
+                res.status(403).send({
+                    error: 'Vous n\'avez pas accès à cette page'
+                })
+            }
         }
 
     }catch(error){
@@ -108,14 +126,22 @@ export const updateCollection = async (req,res) => {
     const userId = req.user.userId 
     const { idCollection } = req.params
     const { title, description, isPublic } = req.body
+
     try{
-        const results = await db.update(collections)
+        const collectionToUpdate = await db.select().from(collections).where(and(eq(collections.id, idCollection),eq(collections.userId, userId)))
+
+        if(collectionToUpdate[0] == null){
+            res.status(403).send({error:"Vous n'avez pas le droit de réaliser cette action"})
+        }
+
+        else{
+            const results = await db.update(collections)
             .set({title:title},{description:description},{isPublic:isPublic})
-            .where(eq(collections.userId, userId), eq(collections.id, idCollection))
+            .where(and(eq(collections.userId, userId), eq(collections.id, idCollection)))
             .returning({id:collections.id})
         
-        res.status(200).send({message: 'Collection updated', data:results})
-        console.log(results)
+            res.status(200).send({message: 'Collection updated', data:results})
+        }
     }catch(error){
         console.error(error)
         res.status(500).send({
@@ -123,4 +149,31 @@ export const updateCollection = async (req,res) => {
             reason: error
         })
     }
+}
+
+/**
+ * @param {request} req
+ * @param {response} res
+ */
+export const deleteCollection = async (req,res) => {
+    const userId = req.user.userId
+    const { idCollection } = req.params
+
+    try{
+        const collectionToDelete = await db.select().from(collections).where(and(eq(collections.id, idCollection),eq(collections.userId, userId)))
+        if(collectionToDelete[0] == null){
+            res.status(403).send({error:"Vous n'avez pas le droit de réaliser cette action"})
+        }
+        else{
+            const results = await db.delete(collections).where(and(eq(collections.id,idCollection), eq(collections.userId, userId))).returning({id:collections.id})
+            res.status(200).send({message: 'Collection deleted', data:results})
+        }
+    }catch(error){
+        console.error(error)
+        res.status(500).send({
+            error: 'Failed to delete the collection',
+            reason: error
+        })
+    }
+
 }
