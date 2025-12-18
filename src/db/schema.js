@@ -1,7 +1,7 @@
-import { sqliteTable, text, integer} from "drizzle-orm/sqlite-core"
+import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core"
 import { randomUUID } from 'crypto'
 
-export const user = sqliteTable('user',{
+export const users = sqliteTable('users',{
     id: text().primaryKey().$defaultFn(()=>randomUUID()),
     mail: text('email', {length:255}).notNull().unique(),
     firstName: text('first_name',{length:50}).notNull(),
@@ -13,7 +13,7 @@ export const user = sqliteTable('user',{
     ),
 })
 
-export const collection = sqliteTable('collection',{
+export const collections = sqliteTable('collections',{
     id: text().primaryKey().$defaultFn(()=>randomUUID()),
     title: text('title', {length:100}).notNull(),
     description: text('description', {length:255}),
@@ -21,10 +21,10 @@ export const collection = sqliteTable('collection',{
     createdAt: integer('created_at', { mode: 'timestamp'}).$defaultFn(
         () => new Date()
     ),
-    userId: text('id_user').references(()=>user.id,{ onDelete: 'cascade' }).notNull(),
+    userId: text('id_user').references(()=>users.id,{ onDelete: 'cascade' }).notNull(),
 })
 
-export const flashcard = sqliteTable('flashcard', {
+export const flashcards = sqliteTable('flashcards', {
     id: text().primaryKey().$defaultFn(()=>randomUUID()),
     front: text('front', {length:100}).notNull(),
     back: text('back', {length:100}).notNull(),
@@ -33,10 +33,10 @@ export const flashcard = sqliteTable('flashcard', {
     createdAt: integer('created_at', { mode: 'timestamp'}).$defaultFn(
         () => new Date()
     ),
-    collectionId: text('id_collection').references(()=>collection.id,{ onDelete: 'cascade'}).notNull(),
+    collectionId: text('id_collection').references(()=>collections.id,{ onDelete: 'cascade'}).notNull(),
 })
 
-export const level = sqliteTable('level',{
+export const levels = sqliteTable('levels',{
     id: text().primaryKey().$defaultFn(()=>randomUUID()),
     levelDefinition: integer('level_definition').notNull(),
     delay: text('delay', {length:100}).notNull(),
@@ -45,7 +45,7 @@ export const level = sqliteTable('level',{
     ),
 })
 
-export const study = sqliteTable('study',{
+export const studies = sqliteTable('studies',{
     id: text().primaryKey().$defaultFn(()=>randomUUID()),
     lastDate: integer('last_date', { mode: 'timestamp'}).$defaultFn(
         () => new Date()
@@ -57,9 +57,9 @@ export const study = sqliteTable('study',{
     createdAt: integer('created_at', { mode: 'timestamp'}).$defaultFn(
         () => new Date()
     ),
-    flashcardId: text('id_flashcard').references(()=>flashcard.id,{ onDelete: 'cascade'}).notNull(),
-    userId: text('id_user').references(()=>user.id,{ onDelete: 'cascade'}).notNull(),
-    levelId: text('id_level').references(()=>level.id,{ onDelete: 'cascade'}).notNull(),
+    flashcardId: text('id_flashcard').references(()=>flashcards.id,{ onDelete: 'cascade'}).notNull(),
+    userId: text('id_user').references(()=>users.id,{ onDelete: 'cascade'}).notNull(),
+    levelId: text('id_level').references(()=>levels.id,{ onDelete: 'cascade'}).notNull(),
 })
 
 
