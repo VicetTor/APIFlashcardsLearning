@@ -15,8 +15,7 @@ app.use(logger)
 app.use('/auth', authRouter)
 app.use('/collections', collectionRouter)
 app.use('/whoami', whoamiRouter)
-
-app.use('/flashcards/collection', flashcardRouter)
+app.use('/flashcards', flashcardRouter)
 
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`)
