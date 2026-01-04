@@ -1,5 +1,5 @@
 import { Router } from "express"
-import  {getAllUsers} from "../controllers/adminController.js"
+import  {getAllUsers, deleteUser} from "../controllers/adminController.js"
 import { authenticateToken } from '../middlewares/authMiddleware.js'
 
 const router = Router()
@@ -8,5 +8,8 @@ router.use(authenticateToken)
 
 router.get('/users', getAllUsers)
 router.get('/users:id', getAllUsersById)
+
+/*-------------------DELETE-------------------*/
+router.delete('/users/:idUserToDelete', deleteUser)
 
 export default router
