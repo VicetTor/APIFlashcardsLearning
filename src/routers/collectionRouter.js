@@ -1,9 +1,5 @@
 import { Router } from "express"
-<<<<<<< HEAD
-import { createCollection, getCollectionById, getCollectionByTitle, getMyCollections} from "../controllers/collectionController.js"
-=======
-import { createCollection, getCollectionById, getCollectionByTitle, getMyCollection, updateCollection, deleteCollection} from "../controllers/collectionController.js"
->>>>>>> 4d3d94a8a743baf51e6c33a430814c4851b8fa67
+import { createCollection, getCollectionById, getCollectionByTitle, getMyCollections, updateCollection, deleteCollection} from "../controllers/collectionController.js"
 import { authenticateToken } from '../middlewares/authMiddleware.js'
 import { validateBody } from "../middlewares/validationMiddleware.js"
 import { collectionSchema } from "../models/collectionModel.js"
