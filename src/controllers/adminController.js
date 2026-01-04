@@ -28,7 +28,10 @@ export const getAllUsersById = async(req, res) => {
         const idCurentUser = req.user.userId
         const [user] = await db.select().from(users).where(eq(users.id,idCurentUser))
         if(user.isAdmin){
-            const listUsers = await db.select().from(users).where(eq(users.id, req.params.id)).orderBy(desc(users.createdAt))
+            const listUsers = await db.select()
+            .from(users)
+            .where(eq(users.id, req.query.id))
+            .orderBy(desc(users.createdAt));
         
         if(!listUsers){
             return res.status(401).json({error: 'no users'})
