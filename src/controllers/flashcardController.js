@@ -233,7 +233,6 @@ export const getFlashcardsToReviewByCollection = async (req, res)=>{
             res.status(200).json(resultsFlashcard);
         }
     }catch(error){
-        console.error(error)
         res.status(500).send({
             error: 'Failed to get flashcards',
         })

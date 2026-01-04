@@ -46,7 +46,6 @@ export const getCollectionById = async (req, res) => {
         }
 
     }catch(error){
-        console.error(error)
         res.status(500).send({
             error: 'Failed to query collection',
             reason: error
@@ -93,7 +92,6 @@ export const getMyCollections = async (req, res) => {
             res.status(200).json(results);
         }
     }catch(error){
-        console.error(error)
         res.status(500).send({
             error: 'Failed to query my collection',
             reason: error
@@ -126,7 +124,6 @@ export const updateCollection = async (req,res) => {
             res.status(200).send({message: 'Collection updated', data:results})
         }
     }catch(error){
-        console.error(error)
         res.status(500).send({
             error: 'Failed to update the collection',
             reason: error
@@ -152,7 +149,6 @@ export const deleteCollection = async (req,res) => {
             res.status(200).send({message: 'Collection deleted', data:results})
         }
     }catch(error){
-        console.error(error)
         res.status(500).send({
             error: 'Failed to delete the collection',
             reason: error
