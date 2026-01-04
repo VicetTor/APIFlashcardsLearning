@@ -3,12 +3,24 @@ import { users } from '../db/schema.js'
 import { eq, desc } from "drizzle-orm"
 import 'dotenv/config'
 
+/**
+ * @param {request} req
+ * @param {response} res
+ */
 export const getAllUsers = async(req, res) => {
     try {
         const idCurentUser = req.user.userId
+        const targetId = req.query.id
         const [user] = await db.select().from(users).where(eq(users.id,idCurentUser))
         if(user.isAdmin){
-            const listUsers = await db.select().from(users).orderBy(desc(users.createdAt))
+            let listUsers
+
+            if(targetId){
+                listUsers = await db.select().from(users).where(eq(users.id, req.query.id)).orderBy(desc(users.createdAt));
+            }
+            else{
+                listUsers = await db.select().from(users).orderBy(desc(users.createdAt))
+            }
         
         if(!listUsers){
             return res.status(401).json({error: 'no users'})
@@ -22,30 +34,6 @@ export const getAllUsers = async(req, res) => {
         })
     }
 }
-
-export const getAllUsersById = async(req, res) => {
-    try {
-        const idCurentUser = req.user.userId
-        const [user] = await db.select().from(users).where(eq(users.id,idCurentUser))
-        if(user.isAdmin){
-            const listUsers = await db.select()
-            .from(users)
-            .where(eq(users.id, req.query.id))
-            .orderBy(desc(users.createdAt));
-        
-        if(!listUsers){
-            return res.status(401).json({error: 'no users'})
-        }
-        res.status(200).json(listUsers)
-        }
-    }
-    catch(error){
-        res.status(500).send({
-            error: 'getAllUsers failed',
-        })
-    }
-}
-
 
 /**
  * @param {request} req
