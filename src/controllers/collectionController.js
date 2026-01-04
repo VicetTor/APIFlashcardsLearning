@@ -1,5 +1,5 @@
 import {db} from "../db/database.js"
-import { collections } from "../db/schema.js"
+import { collections, users } from "../db/schema.js"
 import { request, response } from "express"
 import { eq, and, is } from "drizzle-orm"
 
@@ -29,24 +29,20 @@ export const createCollection = async (req, res) => {
  * @param {response} res 
  */
 export const getCollectionById = async (req, res) => {
-    const { idCollection } = req.params;
-    const userId = req.user.userId;
+    const idCollection = req.params.id
 
     try{
-        const results = await db.select().from(collections).where(eq(collections.id, idCollection)).orderBy('created_at','desc')
+        const resultsCollection = await db.select().from(collections).where(eq(collections.id, idCollection)).orderBy('created_at','desc')
+        const currentUser = await db.select().from(users).where(eq(users.id, req.user.userId)).orderBy('created_at','desc')
+
         //Puisqu'il n'y a qu'une collection par ID alors on peut récupérer au premier index
-        if(results[0]["isPublic"]){
-            res.status(200).json(results);
+        if(resultsCollection[0]["isPublic"] == true || resultsCollection[0]["userId"] == req.user.userId || currentUser[0]["isAdmin"] == true){
+            res.status(200).json(resultsCollection);
         }
         else{
-            if(results[0]["userId"] == userId){
-                res.status(200).json(results);
-            }
-            else{
-                res.status(403).send({
-                    error: 'Vous n\'avez pas accès à cette page'
-                })
-            }
+            res.status(403).send({
+                error: 'Vous n\'avez pas accès à cette page'
+            })
         }
 
     }catch(error){
@@ -85,7 +81,7 @@ export const getCollectionByTitle = async (req, res) => {
  * @param {request} req
  * @param {response} res
  */
-export const getMyCollection = async (req, res) => {
+export const getMyCollections = async (req, res) => {
     const userId = req.user.userId
     try{
         const results = await db.select().from(collections).where(eq(collections.userId, userId)).orderBy('created_at','desc')
@@ -96,7 +92,6 @@ export const getMyCollection = async (req, res) => {
             res.status(200).json(results);
         }
     }catch(error){
-        console.error(error)
         res.status(500).send({
             error: 'Failed to query my collection',
             reason: error
@@ -129,7 +124,6 @@ export const updateCollection = async (req,res) => {
             res.status(200).send({message: 'Collection updated', data:results})
         }
     }catch(error){
-        console.error(error)
         res.status(500).send({
             error: 'Failed to update the collection',
             reason: error
@@ -155,7 +149,6 @@ export const deleteCollection = async (req,res) => {
             res.status(200).send({message: 'Collection deleted', data:results})
         }
     }catch(error){
-        console.error(error)
         res.status(500).send({
             error: 'Failed to delete the collection',
             reason: error
