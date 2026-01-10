@@ -1,6 +1,9 @@
 # APIFlashcardsLearning
+
 An API to create, view and edit flashcards.
 
-## Installation du projet 
+## Installation du projet
 
 [Cliquez ici pour accéder aux étapes d'installation](Installation.md)
+
+[Cliquez ici pour accéder à la documentation du projet](Documentation.md)
