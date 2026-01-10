@@ -28,8 +28,8 @@ export const flashcards = sqliteTable('flashcards', {
     id: text().primaryKey().$defaultFn(()=>randomUUID()),
     front: text('front', {length:100}).notNull(),
     back: text('back', {length:100}).notNull(),
-    urlFront: text('url_front', {length:100}).notNull(),
-    urlBack: text('url_back', {length:100}).notNull(),
+    urlFront: text('url_front', {length:100}),
+    urlBack: text('url_back', {length:100}),
     createdAt: integer('created_at', { mode: 'timestamp'}).$defaultFn(
         () => new Date()
     ),
@@ -39,7 +39,7 @@ export const flashcards = sqliteTable('flashcards', {
 export const levels = sqliteTable('levels',{
     id: text().primaryKey().$defaultFn(()=>randomUUID()),
     levelDefinition: integer('level_definition').notNull(),
-    delay: text('delay', {length:100}).notNull(),
+    delay: integer('delay').notNull(),
     createdAt: integer('created_at', { mode: 'timestamp'}).$defaultFn(
         () => new Date()
     ),
@@ -47,6 +47,7 @@ export const levels = sqliteTable('levels',{
 
 export const studies = sqliteTable('studies',{
     id: text().primaryKey().$defaultFn(()=>randomUUID()),
+    reviewCount: integer('review_count').notNull().$default(0),
     lastDate: integer('last_date', { mode: 'timestamp'}).$defaultFn(
         () => new Date()
     ),
@@ -59,8 +60,8 @@ export const studies = sqliteTable('studies',{
     ),
     flashcardId: text('id_flashcard').references(()=>flashcards.id,{ onDelete: 'cascade'}).notNull(),
     userId: text('id_user').references(()=>users.id,{ onDelete: 'cascade'}).notNull(),
-    levelId: text('id_level').references(()=>levels.id,{ onDelete: 'cascade'}).notNull(),
+    levelId: text('id_level').references(()=>levels.id,{ onDelete: 'cascade'}),
 })
 
-
+// http://localhost:3000/flashcards/16c3b3f9-33c7-4180-97aa-bde0bc96d620/review
 

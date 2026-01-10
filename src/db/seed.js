@@ -37,23 +37,23 @@ const seed = async() => {
         const SeedLevels = [
             {
                 levelDefinition: 1,
-                delay: '1 jour',
+                delay: 1,
             },
             {
                 levelDefinition: 2,
-                delay: '2 jours',
+                delay: 2,
             },
             {
                 levelDefinition: 3,
-                delay: '4 jours',
+                delay: 4,
             },
             {
                 levelDefinition: 4,
-                delay: '8 jours',
+                delay: 8,
             },
             {
                 levelDefinition: 5,
-                delay: '16 jours',
+                delay: 16,
             }
         ]
 
@@ -131,21 +131,24 @@ const seed = async() => {
                 userId: userResults[0].id,
                 levelId: levelResults[0].id,
                 lastDate: new Date(),
-                nextDate: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000) // 1 day later
+                nextDate: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000), // 1 day later
+                reviewCount: 1
             },
             {
                 flashcardId: flashcardResults[1].id,
                 userId: userResults[1].id,
                 levelId: levelResults[1].id,
                 lastDate: new Date(),
-                nextDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000) // 2 days later
+                nextDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000), // 2 days later
+                reviewCount: 2
             },
             {
                 flashcardId: flashcardResults[2].id,
                 userId: userResults[0].id,
                 levelId: levelResults[2].id,
                 lastDate: new Date(),
-                nextDate: new Date(Date.now() + 4 * 24 * 60 * 60 * 1000) // 4 days later
+                nextDate: new Date(Date.now() + 4 * 24 * 60 * 60 * 1000), // 4 days later
+                reviewCount: 3
             }
         ]
 
