@@ -36,11 +36,11 @@ export const getAllUsers = async(req, res) => {
 export const getUserById = async(req, res) => {
     const idUser = req.params.id
     try{
-        const resultsUser = await db.select().from(users).where(eq(users.id, idUser)).orderBy('created_at','desc')
+        const resultUser = await db.select().from(users).where(eq(users.id, idUser)).orderBy('created_at','desc')
         const currentUser = await db.select().from(users).where(eq(users.id, req.user.userId)).orderBy('created_at','desc')
 
-        if(currentUser[0].isAdmin == true ){
-            res.status(200).json(resultsUser);
+        if(currentUser[0].isAdmin){
+            res.status(200).json(resultUser);
         }
         else{
             res.status(403).send({
