@@ -7,7 +7,7 @@ router.use(authenticateToken)
 
 /*------------------GET------------------*/ 
 router.get('/users', getAllUsers)
-router.get('/:id', getUserById)
+router.get('/users/:id', getUserById)
 
 /*-------------------DELETE-------------------*/
 router.delete('/users/:idUserToDelete', deleteUser)

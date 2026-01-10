@@ -2,7 +2,7 @@ import { Router } from "express"
 import { createCollection, getCollectionById, getCollectionByTitle, getMyCollections, updateCollection, deleteCollection} from "../controllers/collectionController.js"
 import { authenticateToken } from '../middlewares/authMiddleware.js'
 import { validateBody } from "../middlewares/validationMiddleware.js"
-import { collectionSchema } from "../models/collectionModel.js"
+import { createCollectionSchema, editCollectionSchema } from "../models/collectionModel.js"
 
 const router = Router()
 router.use(authenticateToken)
@@ -13,10 +13,10 @@ router.get('/:id', getCollectionById)
 router.get('/title/:title', getCollectionByTitle)
 
 /*------------------POST-----------------*/
-router.post('/', validateBody(collectionSchema), createCollection)
+router.post('/', validateBody(createCollectionSchema), createCollection)
 
 /*------------------UPDATE------------------*/
-router.put('/:idCollection', updateCollection)
+router.put('/:idCollection', validateBody(editCollectionSchema), updateCollection)
 
 /*------------------DELETE------------------*/
 router.delete('/:idCollection', deleteCollection)
