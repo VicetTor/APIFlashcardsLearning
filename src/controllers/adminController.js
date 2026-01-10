@@ -10,16 +10,13 @@ import 'dotenv/config'
 export const getAllUsers = async(req, res) => {
     try {
         const idCurentUser = req.user.userId
-        const targetId = req.query.id
         const [user] = await db.select().from(users).where(eq(users.id,idCurentUser))
         if(user.isAdmin){
             let listUsers = await db.select().from(users).orderBy(desc(users.createdAt))
-
-        
-        if(!listUsers){
-            return res.status(401).json({error: 'no users'})
-        }
-        res.status(200).json(listUsers)
+            if(!listUsers){
+                return res.status(401).json({error: 'no users'})
+            }
+            res.status(200).json(listUsers)
         }
         else {
             return res.status(403).json({error: "Access denied: you are not an administrator"})
