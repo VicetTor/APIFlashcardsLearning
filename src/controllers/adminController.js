@@ -27,6 +27,9 @@ export const getAllUsers = async(req, res) => {
         }
         res.status(200).json(listUsers)
         }
+        else {
+            return res.status(403).json({error: "Access denied: you are not an administrator"})
+        }
     }
     catch(error){
         res.status(500).send({
