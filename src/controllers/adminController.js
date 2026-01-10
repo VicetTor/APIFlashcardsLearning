@@ -44,7 +44,7 @@ export const getUserById = async(req, res) => {
         }
         else{
             res.status(403).send({
-                error: 'Vous n\'avez pas accès à cette page'
+                error: 'Access denied: you are not an administrator'
             })
         }
 
