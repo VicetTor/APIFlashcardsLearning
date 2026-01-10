@@ -14,9 +14,9 @@ router.get('/collection/:id/review', getFlashcardsToReviewByCollection)
 
 /*------------------POST------------------*/ 
 router.post('/', validateBody(createFlashcardSchema), createFlashcard)
-router.post('/edit/:id', validateBody(editFlashcardSchema), editFlashcardById)
 
 /*------------------PATCH------------------*/ 
+router.patch('/:id', validateBody(editFlashcardSchema), editFlashcardById)
 router.patch('/:id/review', reviewFlashcardById)
 
 /*------------------DELETE------------------*/ 
