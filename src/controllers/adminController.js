@@ -13,14 +13,8 @@ export const getAllUsers = async(req, res) => {
         const targetId = req.query.id
         const [user] = await db.select().from(users).where(eq(users.id,idCurentUser))
         if(user.isAdmin){
-            let listUsers
+            let listUsers = await db.select().from(users).orderBy(desc(users.createdAt))
 
-            if(targetId){
-                listUsers = await db.select().from(users).where(eq(users.id, req.query.id)).orderBy(desc(users.createdAt));
-            }
-            else{
-                listUsers = await db.select().from(users).orderBy(desc(users.createdAt))
-            }
         
         if(!listUsers){
             return res.status(401).json({error: 'no users'})
@@ -38,6 +32,34 @@ export const getAllUsers = async(req, res) => {
     }
 }
 
+/**
+ * @param {request} req
+ * @param {response} res
+ */
+export const getUserById = async(req, res) => {
+    const idUser = req.params.id
+    try{
+        const resultsUser = await db.select().from(users).where(eq(users.id, idUser)).orderBy('created_at','desc')
+        const currentUser = await db.select().from(users).where(eq(users.id, req.user.userId)).orderBy('created_at','desc')
+
+        if(currentUser[0].isAdmin == true ){
+            res.status(200).json(resultsUser);
+        }
+        else{
+            res.status(403).send({
+                error: 'Vous n\'avez pas accès à cette page'
+            })
+        }
+
+    }
+    catch(error){
+        res.status(500).send({
+            error: 'getUserById failed',
+        })
+    }
+
+
+}
 /**
  * @param {request} req
  * @param {response} res
