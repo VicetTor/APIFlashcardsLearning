@@ -1,5 +1,6 @@
 import { db } from '../db/database.js'
 import { users } from '../db/schema.js'
+import { eq } from "drizzle-orm"
 import bcrypt from 'bcrypt'
 import jwt  from 'jsonwebtoken'
 import 'dotenv/config' 
@@ -25,7 +26,6 @@ export const register = async (req, res) =>{
         }).returning({id:users.id, mail:users.mail, firstName:users.firstName, lastName:users.lastName, isAdmin:users.isAdmin})
         
         const token = jwt.sign({id: newUser.id}, process.env.JWT_SECRET, {expiresIn: '24h'})
-        console.log(newUser)
         res.status(201).send({message: 'User created', userData:newUser, token})
 
     }catch(error){
@@ -47,9 +47,14 @@ export const login = async (req, res) => {
         const { mail, password } = req.body
 
         const [user] = await db.select().from(users).where(eq(users.mail,mail))
+
+        if(!user){
+            return res.status(401).json({error: "Invalid email or password"})
+        }
+
         const isValidPassword = await bcrypt.compare(password, user.password)
 
-        if(!user || !isValidPassword){
+        if(!isValidPassword){
             return res.status(401).json({error: "Invalid email or password"})
         }
 
