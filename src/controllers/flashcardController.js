@@ -135,10 +135,15 @@ export const editFlashcardById = async (req, res)=>{
     const idFlashcard = req.params.id
     const { front, back, urlFront, urlBack } = req.body;
     try{
-        const resultsFlashcard = await db.select().from(flashcards).where(eq(flashcards.id, idFlashcard)).orderBy('created_at','desc')
-        const resultsCollection = await db.select().from(collections).where(eq(collections.id, resultsFlashcard[0]["collectionId"])).orderBy('created_at','desc')
+        const [resultsFlashcard] = await db.select().from(flashcards).where(eq(flashcards.id, idFlashcard));
 
-        if(resultsCollection[0]["userId"] == req.user.userId){
+        if (!resultsFlashcard) {
+            return res.status(404).send({ error: 'Flashcard not found' });
+        }
+
+        const [resultsCollection] = await db.select().from(collections).where(eq(collections.id, resultsFlashcard.collectionId));
+
+        if(resultsCollection.userId == req.user.userId){
             await db.update(flashcards).set({front:front, back:back, urlFront:urlFront, urlBack:urlBack}).where(eq(flashcards.id, idFlashcard));
             res.status(200).send({message: 'Flashcard edited successfully'});
         }
